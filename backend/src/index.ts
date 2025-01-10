@@ -5,7 +5,7 @@ import middleware from './middleware';
 const app = express()
 const port = 3000
 
-const LEGACY_SERVICE_API = 'http://legacy-backend:9991/api';
+app.use(middleware)
 
 app.get('/api/products', async (req, res) => {
   try {
