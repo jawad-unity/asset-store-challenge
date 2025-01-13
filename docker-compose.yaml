@@ -65,6 +65,22 @@ services:
       - 9991:9991
     networks:
       - store-network
+  
+  # load test
+  loadtest:
+    build: 
+      context: ./loadtest
+      dockerfile: Dockerfile
+    ports:
+      - "8089:8089"
+    volumes:
+      - ./loadtest:/mnt/locust
+    environment:
+      - TARGET_HOST=http://backend_lb
+    networks:
+      - store-network
+    depends_on:
+      - backend_lb
 networks:
   backend-internal-network: {}
   frontend-internal-network: {}

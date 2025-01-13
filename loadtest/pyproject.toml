@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "as-challenge-locust"
+version = "0.1.0"
+description = ""
+authors = ["jawad grar <jawad.grar@unity3d.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+locust = "^2.32.6"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
