@@ -49,3 +49,8 @@ poetry install
 ```bash
 poetry run locust
 ```
+
+# dashboard screenshot in low and high traffic
+
+![Low traffic record](rpsless5.png "Low traffic")
+![High traffice record](rps15.png "High traffic")
