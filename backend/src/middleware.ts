@@ -1,10 +1,4 @@
-import express from "express";
-
-export default function Middleware(
-    req: express.Request,
-    res: express.Response,
-    next: express.NextFunction,
-) {
+export default function Middleware(req, res, next) {
     if (!req.get("content-type")) {
         req.headers["content-type"] = "application/json";
     }
