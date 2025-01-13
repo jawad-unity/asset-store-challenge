@@ -1,13 +1,15 @@
 import express from 'express';
 import { ProductService } from './services/ProductService';
 import middleware from './middleware';
+import dotenv from 'dotenv';
 
 const app = express()
 const port = 3000
 
+dotenv.config();
 app.use(middleware)
 
-app.get('/api/products', async (req, res) => {
+app.get('/api/products', async (_, res) => {
   try {
     const products = await ProductService.getProducts();
     return res.json(products);

@@ -5,7 +5,7 @@ import { BACKEND_API_URL } from "@/lib/constants";
 export async function ProductListing() {
   const response = await fetch(`${BACKEND_API_URL}/products`, {
     headers: {
-      Authorization: `Bearer todo_token`,
+      Authorization: `Bearer ${process.env.AUTH_TOKEN}`,
     },
   });
   const data = await response.json();

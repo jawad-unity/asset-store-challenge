@@ -10,7 +10,7 @@ import { Product } from '@/lib/products';
 export const productsFetcher: Fetcher<Product[]> = async () => {
     const response = await fetch(`${BACKEND_API_URL}/products`, {
         headers: {
-            'Authorization': `Bearer todo_token`
+            'Authorization': `Bearer ${process.env.AUTH_TOKEN}`
         }
     }
     );
@@ -21,7 +21,7 @@ export const productsFetcher: Fetcher<Product[]> = async () => {
 export const productFetcher: Fetcher<Product> = async (id: string) => {
     const response = await fetch(`${BACKEND_API_URL}/products/${id}`, {
         headers: {
-            'Authorization': `Bearer todo_token`
+            'Authorization': `Bearer ${process.env.AUTH_TOKEN}`
         }
     }
     );

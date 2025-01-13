@@ -38,7 +38,7 @@ export default memo(ProductDetails);
 export async function ProductDetailsStatic({ id }: { id: string }) {
   const response = await fetch(`${BACKEND_API_URL}/products/${id}`, {
     headers: {
-      Authorization: `Bearer todo_token`,
+      Authorization: `Bearer ${process.env.AUTH_TOKEN}`,
     },
   });
   const data = await response.json();
