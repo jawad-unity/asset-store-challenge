@@ -1,6 +1,12 @@
 import { ProductDetails } from "../entities/Product";
 import { CACHE_TTL } from "../utils/constants";
 
+/*
+ * This is a sample cache repository that stores product details in memory for a certain amount of time.
+ * The cache is cleared after the time-to-live (TTL) has expired.
+ * 
+ * TODO: replace with redit node package
+ */
 export namespace CacheRepository {
     const cache = new Map<string, ProductDetails>();
     const expiryTime = new Date().getTime() + CACHE_TTL;
