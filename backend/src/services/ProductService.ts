@@ -1,45 +1,58 @@
 import { Product, ProductDetails } from "../entities/Product";
-import { CacheRepository } from "../repositories/cacheRepository";
 import { LEGACY_SERVICE_API } from "../utils/constants";
+import { cache, CACHE_KEYS } from "./CacheService";
 import { PriceService } from "./PriceService";
 
 export namespace ProductService {
     export async function getProducts(): Promise<Product[]> {
-
-        const products = await CacheRepository.getAll();
-        if (products && products.length > 0) {
-            return products;
+        // Try to get products from cache
+        const cachedProducts = cache.get<Product[]>(CACHE_KEYS.ALL_PRODUCTS);
+        if (cachedProducts) {
+            return cachedProducts;
         }
 
-        const response = await fetch(`${LEGACY_SERVICE_API}/products`);
-        const data = await response.json();
+        try {
+            const response = await fetch(`${LEGACY_SERVICE_API}/products`);
+            const data = await response.json();
+            const products = data.products ?? [];
 
-        CacheRepository.setAll(data.products).then(() => {
-            console.info('Products cached');
-        }).catch(error => {
-            console.warn(`Error caching products: ${error}`);
-        });
+            // Cache the products
+            cache.set(CACHE_KEYS.ALL_PRODUCTS, products);
 
-        return data.products ?? [];
+            return products;
+        } catch (error) {
+            console.error('Error fetching products:', error);
+            return [];
+        }
     }
 
     export async function getProduct(id: string): Promise<ProductDetails | null> {
-        const products = await getProducts();
-        const product = products.find(product => product.id === id);
-
-        if (!product) {
-            console.info(`Product with ID ${id} not found`);
-            return null;
+        // Try to get product details from cache
+        const cacheKey = CACHE_KEYS.PRODUCT_DETAILS(id);
+        const cachedProduct = cache.get<ProductDetails>(cacheKey);
+        if (cachedProduct) {
+            return cachedProduct;
         }
 
-        const price = await PriceService.getPrice(id);
+        try {
+            const products = await getProducts();
+            const product = products.find(product => product.id === id);
 
-        CacheRepository.set({ ...product, price }).then(() => {
-            console.info(`Product with ID ${id} cached`);
-        }).catch(error => {
-            console.warn(`Error caching product with ID ${id}: ${error}`);
-        });
+            if (!product) {
+                console.info(`Product with ID ${id} not found`);
+                return null;
+            }
 
-        return { ...product, price };
+            const price = await PriceService.getPrice(id);
+            const productDetails: ProductDetails = { ...product, price };
+
+            // Cache the product details
+            cache.set(cacheKey, productDetails);
+
+            return productDetails;
+        } catch (error) {
+            console.error(`Error fetching product ${id}:`, error);
+            return null;
+        }
     }
 }
