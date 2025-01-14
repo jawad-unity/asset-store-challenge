@@ -1,7 +1,24 @@
+import os
 from locust import HttpUser, task, constant_throughput
+from dotenv import load_dotenv
+load_dotenv()
 
-class Products(HttpUser):
-    wait_time = constant_throughput(1) # 1 request per second
-    @task
+# front-end load test
+# class UserBehavior(HttpUser):
+#     wait_time = constant_throughput(1) # 1 request per second per user
+#     @task(2)
+#     def get_products(self):
+#         self.client.get("/")
+#     @task(1)
+#     def get_product(self):
+#         self.client.get("/products/46172")
+
+# back-end load test
+class ProductsApi(HttpUser):
+    wait_time = constant_throughput(1) # 1 request per second per user
+    @task(3)
     def get_products(self):
-        self.client.get("/api/products", headers={"Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6ImFzc2V0LXN0b3JlLWNoYWxsZW5nZSIsImlhdCI6MTUxNjIzOTAyMn0.FKFJIMekQ5Hrb18x3Dalrg4hHNSBeHQ3kD60cxfaEHY"})
+        self.client.get("/api/products", headers={"Authorization": "Bearer " + os.getenv("AUTH_TOKEN")})
+    @task
+    def get_product(self):
+        self.client.get("/api/products/46172", headers={"Authorization": "Bearer " + os.getenv("AUTH_TOKEN")})

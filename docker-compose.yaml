@@ -68,6 +68,20 @@ services:
     networks:
       - frontend-internal-network
       - store-network
+  frontend_app3:
+    build:
+      context: ./frontend
+      dockerfile: ./Dockerfile
+    container_name: frontend_app3
+    ports:
+      - "3006:3000"
+    volumes:
+      - ./frontend:/app
+    environment:
+      - PORT=3000
+    networks:
+      - frontend-internal-network
+      - store-network
   frontend_lb:
     image: nginx:latest
     container_name: frontend_lb

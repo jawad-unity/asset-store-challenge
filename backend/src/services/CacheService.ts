@@ -1,7 +1,7 @@
 import NodeCache from "node-cache";
 
 export const cache = new NodeCache({
-    stdTTL: 120, // 2 minutes
+    stdTTL: 600, // 10 minutes
     checkperiod: 60, // 1 minute
     useClones: false
 });
